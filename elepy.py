@@ -1,15 +1,16 @@
+import os
+from dotenv import load_dotenv
 import mysql.connector as mc
 from tkinter import *  
 from PIL import ImageTk, Image
 from functools import partial
-conn=mc.connect(host='localhost',user='root',passwd='root')
+load_dotenv()
+
+conn=mc.connect(host='localhost',user=os.getenv("MYSQL_USERNAME"),password=os.getenv("MYSQL_PWD"),auth_plugin='mysql_native_password')
 mycursor=conn.cursor()
 def createdatabase():
-    mycursor.execute("show databases")
-    db=mycursor.fetchall()
-    if "chem" not in db[0]:
-        mycursor.execute("create database chem")
-    mycursor.execute("use chem")
+    mycursor.execute("CREATE DATABASE IF NOT EXISTS chem")
+    mycursor.execute("USE chem")
 createdatabase()
 mycursor.execute("show tables")
 tables=mycursor.fetchall()
